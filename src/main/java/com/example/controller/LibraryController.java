@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.example.enetity.Library;
+import com.example.entity.Library;
 import com.example.service.LibraryService;
 
 @Controller
@@ -24,7 +24,7 @@ public class LibraryController {
 	}
 	
 
-	// データ全件取得処理
+	// データ一覧表示処理
 	@GetMapping
 	public String index(Model model) {
 		List<Library> libraries = this.libraryService.findAll();
