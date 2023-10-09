@@ -2,14 +2,14 @@
 <html lang="ja" xmlns:th="http://www.thymeleaf.org"
     th:replace="~{layouts/main :: main(~{::title}, ~{::body/content()})}">
 <head>
-    <title>図書一覧</title>
+    <title>貸し出し履歴一覧</title>
 </head>
 <body>
     <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle"></button>
-                <span class="navbar-brand" id="page-title">Book List</span>
+                <span class="navbar-brand" id="page-title">Borrow History</span>
             </div>
         </div>
     </nav>
@@ -25,34 +25,20 @@
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>ID</th>
                                         <th>Title</th>
-                                        <th></th>
+                                        <th>Rent Date</th>
+                                        <th>Return Date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
 									<!-- Controlleから渡ってきたmodelを繰り返し表示 -->
-                                    <tr th:each="library : ${libraries}" th:switch="${library.userId}">
-										<td th:text="${library.id}"></td>
-										<td th:text="${library.name}"></td>
-										<!-- 書籍のuserIdによって表示される内容を条件分岐 -->
-										<td th:case="0">
-											<form th:action="@{/library/borrow}" method="get">
-												<!-- 書籍idをパラメータとして送信 -->
-												<input type="hidden" name="id" th:value="${library.id}">
-												<input type="submit" value="borrow" class="btn btn-info">
-											</form>
-										</td>
-										<td th:case="${user.id}">
-											<form th:action="@{/library/return}" method="post">
-												<!-- 書籍idをパラメータとして送信 -->
-												<input type="hidden" name="id" th:value="${library.id}">
-												<input type="submit" value="return" class="btn btn-danger">
-											</form>
-										</td>
-										<td th:case="*">
-											<div class="btn btn-success">borrowing</div>
-										</td>
+                                    <tr th:each="log : ${logs}">
+										<!-- リレーション設定によりlibrary.nameを表示 -->
+										<td th:text="${log.library.name}"></td>
+										<td th:text="${#temporals.format(log.rentDate, 'yyyy年MM月dd日')}"></td>
+										<!-- returnDateがnullかどうかの条件式 -->
+										<td th:text="${log.returnDate != null}? 
+										             ${#temporals.format(log.returnDate, 'yyyy年MM月dd日')} : '-'"></td>
 									</tr>
                                 </tbody>
                             </table>
